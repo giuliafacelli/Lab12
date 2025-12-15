@@ -47,5 +47,16 @@ class Controller:
         self._view.page.update()
 
     """Implementare la parte di ricerca del cammino minimo"""
-    # TODO
+    def handle_percorsi_minimi(self, e):
+        try:
+            soglia = float(self._view.txt_soglia.value)
+        except:
+            self._view.show_alert("Inserisci un numero valido per la soglia.")
+            return
 
+        sentieri = self._model.get_cammino_minimo_ricorsione(soglia)
+        self._view.lista_visualizzazione_3.controls.clear()
+        for s in sentieri:
+            self._view.lista_visualizzazione_3.controls.append(
+                ft.Text(f"{s['inizio']} --> {s['fine']} [peso: {s['peso']}]")) # aggiunge alla listview tutti i sentieri
+        self._view.page.update()
