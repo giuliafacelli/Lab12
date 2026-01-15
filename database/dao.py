@@ -15,22 +15,19 @@ class DAO:
 
         cursor = conn.cursor(dictionary=True)
         query = """
-                SELECT r.*
+                SELECT DISTINCT r.id, r.nome, r.localita, r.altitudine, r.capienza, r.aperto
                 FROM rifugio r, connessione c
                 WHERE (c.id_rifugio1 = r.id or c.id_rifugio2 = r.id)
-                AND c.year = %s
+                AND anno = %s
+                ORDER BY r.nome
                 """
 
-        try:
-            cursor.execute(query, (year,))
-            for row in cursor:
-                rifugi[row['id']] = Rifugio(**row)
-            conn.close()
-            cursor.close()
-            return rifugi
-        except Exception:
-            print("Errore nell'esecuzione della query.")
-            return None
+        cursor.execute(query, (year,))
+        for row in cursor:
+            rifugi[row['id']] = Rifugio(**row)
+        conn.close()
+        cursor.close()
+        return rifugi
 
 
     @staticmethod
@@ -40,31 +37,28 @@ class DAO:
 
         cursor = conn.cursor(dictionary=True)
         query = """
-                SELECT *
+                SELECT id_rifugio1, id_rifugio2, distanza, difficolta, durata
                 FROM connessione c
-                WHERE year = %s
+                WHERE anno = %s
                 """
-        try:
-            cursor.execute(query, (year,))
-            for row in cursor:
-                rifugio1 = rifugi.get(row['id_rifugio1'])
-                rifugio2 = rifugi.get(row['id_rifugio2'])
+        cursor.execute(query, (year,))
+        for row in cursor:
+            rifugio1 = rifugi.get(row['id_rifugio1'])
+            rifugio2 = rifugi.get(row['id_rifugio2'])
 
-                if rifugio1 is not None and rifugio2 is not None and (rifugio1, rifugio2) not in sentieri:
-                    sentieri[rifugio1, rifugio2] = Connessione(
-                        rifugio1,
-                        rifugio2,
-                        row['Distanza'],
-                        row['Difficolta'],
-                        row['Durata']
-                    )
+            if rifugio1 is not None and rifugio2 is not None and (rifugio1, rifugio2) not in sentieri:
+                sentieri[rifugio1, rifugio2] = Connessione(
+                    rifugio1,
+                    rifugio2,
+                    row['distanza'],
+                    row['difficolta'],
+                    row['durata']
+                )
 
-            conn.close()
-            cursor.close()
-            return sentieri
-        except Exception:
-            print("Errore nell'esecuzione della query.")
-            return None
+        conn.close()
+        cursor.close()
+        return sentieri
+
 
 
 

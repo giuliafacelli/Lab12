@@ -9,7 +9,6 @@ class Connessione:
     distanza: float
     difficolta: str
     durata: datetime.time
-    anno: int
 
     def __str__(self):
         return (f'Sentiero: {self.rifugio1} - {self.rifugio2} --> {self.distanza} km'
