@@ -64,10 +64,10 @@ class Model:
 
         # TODO
         pesi = [edge['weight'] for _,_,edge in self.G.edges(data=True)]
-        if pesi is not None:
-            return min(pesi), max(pesi)
-        else:
-            return None
+        if not pesi:
+            return None, None
+        return min(pesi), max(pesi)
+
 
 
     def count_edges_by_threshold(self, soglia):
@@ -113,12 +113,12 @@ class Model:
                 self.best_edges = partial_edges[:]
 
         ultimo_nodo = partial_nodes[-1]
-        neighs = self._get_neighs(ultimo_nodo)
+        neighs = self._get_neighs(ultimo_nodo, partial_nodes, soglia)
 
         for v in neighs:
             edge_attr = self.G.get_edge_data(ultimo_nodo, v)
             partial_nodes.append(v)
-            partial_edges.append(ultimo_nodo, v, edge_attr)
+            partial_edges.append((ultimo_nodo, v, edge_attr))
             self._ricorsione(soglia, partial_nodes, partial_edges)
             partial_nodes.pop()
             partial_edges.pop()

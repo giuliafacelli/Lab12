@@ -18,7 +18,7 @@ class DAO:
                 SELECT DISTINCT r.id, r.nome, r.localita, r.altitudine, r.capienza, r.aperto
                 FROM rifugio r, connessione c
                 WHERE (c.id_rifugio1 = r.id or c.id_rifugio2 = r.id)
-                AND anno = %s
+                AND anno <= %s
                 ORDER BY r.nome
                 """
 
@@ -39,7 +39,7 @@ class DAO:
         query = """
                 SELECT id_rifugio1, id_rifugio2, distanza, difficolta, durata
                 FROM connessione c
-                WHERE anno = %s
+                WHERE anno <= %s
                 """
         cursor.execute(query, (year,))
         for row in cursor:
