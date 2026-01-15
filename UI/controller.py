@@ -57,8 +57,10 @@ class Controller:
             return
 
         cammino = self._model.cammino_minimo_ricorsione(soglia)
+
         self._view.lista_visualizzazione_3.controls.clear()
         self._view.lista_visualizzazione_3.controls.append(ft.Text("Cammino minimo:"))
+
         for edge in cammino:
             print(edge[0])
             self._view.lista_visualizzazione_3.controls.append(ft.Text(f"{edge[0]} --> {edge[1]} [peso: {edge[2]['weight']}]"))
